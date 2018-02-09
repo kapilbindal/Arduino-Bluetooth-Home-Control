@@ -6,29 +6,86 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.kapil.turnon.Control">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="On"
-        android:id="@+id/on"
-        android:layout_gravity="center"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Off"
-        android:id="@+id/off"
-        android:layout_gravity="center"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Disconnect"
-        android:id="@+id/disconnect"
-        android:layout_gravity="center"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/background_shape">
+            <TextView
+                android:layout_width="280dp"
+                android:layout_height="50dp"
+                android:id="@+id/textSpeak"
+                android:text="Task to be done!"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:textSize="18sp"/>
+            <ImageButton
+                android:layout_width="45dp"
+                android:layout_height="44dp"
+                android:id="@+id/btnSpeak"
+                android:src="@android:drawable/ic_btn_speak_now"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_shape"
+        android:layout_margin="15dp"
+        android:orientation="vertical">
 
-    <SeekBar
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/seekbar"
-        android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            >
+            <ImageButton
+                android:id="@+id/btnFan1"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:hapticFeedbackEnabled="true"
+                android:backgroundTint="@color/colorPrimary"
+                android:background="@android:drawable/ic_lock_lock"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="match_parent"/>
+
+            <ImageButton
+                android:id="@+id/btnLight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:hapticFeedbackEnabled="true"
+                android:background="@android:drawable/ic_menu_add"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"></ImageButton>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <ImageButton
+                android:id="@+id/btnFan2"
+                android:layout_weight="1"
+                android:hapticFeedbackEnabled="true"
+                android:background="@android:drawable/ic_menu_delete"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"></ImageButton>
+
+            <ImageButton
+                android:id="@+id/btnAc"
+                android:background="@android:drawable/ic_menu_my_calendar"
+                android:layout_marginTop="20dp"
+                android:hapticFeedbackEnabled="true"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"></ImageButton>
+        </LinearLayout>
+    </LinearLayout>
+
+
 
 </LinearLayout>
