@@ -7,12 +7,18 @@ import android.bluetooth.BluetoothSocket;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +30,8 @@ import java.util.UUID;
 
 public class Control extends AppCompatActivity {
     public static final String TAG = "try";
-    ImageButton btnLight, btnFan1,btnFan2, btnAc, btnSpeak;
-    Boolean toggleLight=false,toggleFan1=false,toggleFan2=false,toggleAc = false;
+    ImageButton btnLight, btnFan1,btnFan2,btnAc,btnSpeak;
+    Boolean toggleLight = false,toggleFan1 = false,toggleFan2 = false,toggleAc = false;
     String address = null;
     TextView txtSpeechInput;
     private ProgressDialog progress;
@@ -35,12 +41,13 @@ public class Control extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    @Override
+    final TransitionDrawable td = new TransitionDrawable(new Drawable[]{new ColorDrawable(0xFFFF0000), new ColorDrawable(0x11FF0000)});
+
+    /*@Override
     protected void onStart() {
         super.onStart();
         new ConnectBT().execute();
-    }
-
+    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +64,7 @@ public class Control extends AppCompatActivity {
         btnFan1 = findViewById(R.id.btnFan1);
         btnFan2 = findViewById(R.id.btnFan2);
         btnAc = findViewById(R.id.btnAc);
+
         btnSpeak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,29 +77,32 @@ public class Control extends AppCompatActivity {
             public void onClick(View v)
             {
                 if(toggleLight == false){
-                    btnLight.setBackgroundColor(Color.GREEN);
+                    //btnLight.setBackgroundColor(Color.GREEN);
                     turnOnLight();
+                    msg("Light is turned ON");
                     toggleLight = true;
                 }
                 else if(toggleLight == true){
-                    btnLight.setBackgroundColor(Color.RED);
+                    //btnLight.setBackgroundColor(Color.RED);
                     turnOffLight();
+                    msg("Light is turned OFF");
                     toggleLight = false;
                 }
             }
         });
-
         btnFan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
                 if(toggleFan1 == false){
-                    btnFan1.setBackgroundColor(Color.GREEN);
+                    //btnFan1.setBackgroundColor(Color.GREEN);
+                    msg("Fan is turned ON");
                     turnOnFan1();
                     toggleFan1 = true;
                 }
                 else if(toggleFan1 == true){
-                    btnFan1.setBackgroundColor(Color.RED);
+                    //btnFan1.setBackgroundColor(Color.RED);
+                    msg("Fan is turned OFF");
                     turnOffFan1();
                     toggleFan1 = false;
                 }
@@ -102,37 +113,42 @@ public class Control extends AppCompatActivity {
             public void onClick(View v)
             {
                 if(toggleFan2 == false){
-                    btnFan2.setBackgroundColor(Color.GREEN);
+                    //btnFan2.setBackgroundColor(Color.GREEN);
+                    msg("Fan is turned ON");
                     turnOnFan2();
                     toggleFan2 = true;
                 }
                 else if(toggleFan2 == true){
-                    btnFan2.setBackgroundColor(Color.RED);
+                    //btnFan2.setBackgroundColor(Color.RED);
+                    msg("Fan is turned OFF");
                     turnOffFan2();
                     toggleFan2 = false;
                 }
             }
         });
-
         btnAc.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if(toggleAc == false){
-                    btnAc.setBackgroundColor(Color.GREEN);
+                    //btnAc.setBackgroundColor(Color.GREEN);
+                    msg("AC is turned ON");
                     turnOnAc();
                     toggleAc = true;
                 }
                 else if(toggleAc == true){
-                    btnAc.setBackgroundColor(Color.RED);
+                   // btnAc.setBackgroundColor(Color.RED);
+                    msg("AC is turned OFF");
                     turnOffAc();
                     toggleAc = false;
                 }
             }
         });
     }
-    private void promptSpeechInput() {
+
+    private void promptSpeechInput()
+    {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -148,180 +164,109 @@ public class Control extends AppCompatActivity {
         }
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case REQ_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && null != data) {
-
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     txtSpeechInput.setText(result.get(0));
                     String command = txtSpeechInput.getText().toString();
-                    if(command.contains("light")&& command.contains("on")){ turnOnLight(); toggleLight = true;}
-                    else if(command.contains("light")&& command.contains("off")){ turnOffLight(); toggleLight = false;}
-                    else if(command.contains("fan 1")&& command.contains("on")){ turnOnFan1(); toggleFan1 = true;}
-                    else if(command.contains("fan 1")&& command.contains("off")){ turnOffFan1(); toggleFan1 = false;}
-                    else if(command.contains("fan 2")&& command.contains("on")){ turnOnFan2(); toggleFan2 = true;}
-                    else if(command.contains("fan 2")&& command.contains("off")){ turnOffFan2(); toggleFan2 = false;}
-                    else if(command.contains("ac")&& command.contains("on")){ turnOnAc(); toggleAc = true;}
-                    else if(command.contains("ac")&& command.contains("off")){ turnOffAc(); toggleAc = false;}
+                    if(command.contains("LIGHT")&& command.contains("ON")){ msg("Light is turned ON"); turnOnLight(); toggleLight = true;}
+                    else if(command.contains("LIGHT")&& command.contains("OFF")){ msg("Light is turned OFF"); turnOffLight(); toggleLight = false;}
+                    else if(command.contains("FAN 1")&& command.contains("ON")){ msg("FAN is turned ON"); turnOnFan1(); toggleFan1 = true;}
+                    else if(command.contains("FAN 1")&& command.contains("OFF")){ msg("FAN is turned OFF"); turnOffFan1(); toggleFan1 = false;}
+                    else if(command.contains("FAN 2")&& command.contains("ON")){ msg("FAN is turned ON"); turnOnFan2(); toggleFan2 = true;}
+                    else if(command.contains("FAN 2")&& command.contains("OFF")){ msg("FAN is turned OFF"); turnOffFan2(); toggleFan2 = false;}
+                    else if(command.contains("AC")&& command.contains("ON")){ msg("AC is turned ON"); turnOnAc(); toggleAc = true;}
+                    else if(command.contains("AC")&& command.contains("OFF")){ msg("AC is turned OFF"); turnOffAc(); toggleAc = false;}
                 }
                 break;
             }
-
         }
     }
 
     private void turnOnLight()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("a".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOffLight()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("A".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOnFan1()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("b".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOffFan1()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("B".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOnFan2()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("c".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOffFan2()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("C".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOnAc()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("d".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
-        }
-        else {
-            new ConnectBT().execute();
         }
     }
     private void turnOffAc()
     {
-        if (btSocket!=null)
-        {
-            try
-            {
+        if(btSocket!=null) {
+            try {
                 btSocket.getOutputStream().write("D".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
         }
-        else {
-            new ConnectBT().execute();
-        }
-    }
-    private void Disconnect()
-    {
-        if (btSocket!=null) //If the btSocket is busy
-        {
-            try
-            {
-                btSocket.close(); //close connection
-            }
-            catch (IOException e)
-            { msg("Error");}
-        }
-        finish(); //return to the first layout
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void>  // UI thread
@@ -366,15 +311,14 @@ public class Control extends AppCompatActivity {
             }
             else
             {
-                msg("Connected.");
+                msg("Connected");
                 isBtConnected = true;
-                //Log.d(TAG, "onPostExecute: " + "Working");
             }
             progress.dismiss();
         }
     }
     private void msg(String s)
     {
-        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 }

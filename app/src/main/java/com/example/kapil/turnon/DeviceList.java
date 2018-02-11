@@ -19,7 +19,6 @@ import java.util.Set;
 
 public class DeviceList extends AppCompatActivity {
     public static final String EXTRA_ADDRESS = "key";
-    public static final String TAG = "Check";
     Button btnPaired;
     ListView devicelist;
     private BluetoothAdapter myBluetooth = null;
@@ -34,7 +33,7 @@ public class DeviceList extends AppCompatActivity {
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
         if(myBluetooth == null)
         {
-            //Show a mensag. that thedevice has no bluetooth adapter
+            //Show a message that the device has no bluetooth adapter
             Toast.makeText(getApplicationContext(), "Bluetooth Device Not Available", Toast.LENGTH_LONG).show();
             //finish apk
             finish();
@@ -50,7 +49,6 @@ public class DeviceList extends AppCompatActivity {
                 startActivityForResult(turnBTon,1);
             }
         }
-
         btnPaired.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -63,14 +61,12 @@ public class DeviceList extends AppCompatActivity {
     {
         pairedDevices = myBluetooth.getBondedDevices();
         ArrayList list = new ArrayList();
-        //Log.d(TAG, "pairedDevicesList: " + pairedDevices.size() + " ");
 
         if (pairedDevices.size()>0)
         {
             for(BluetoothDevice bt : pairedDevices)
             {
-                list.add(bt.getName() + "\n" + bt.getAddress());
-                //Log.d(TAG, "pairedDevicesList: " + bt.getAddress());//Get the device's name and the address
+                list.add(bt.getName() + "\n" + bt.getAddress());//Get the device's name and the address
             }
         }
         else
